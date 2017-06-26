@@ -26,31 +26,37 @@ def main():
 
     address = (socket.gethostbyname(url.netloc), port)
 
-    s = socket.create_connection(address)
-    msg = set_message(url, 0, 100)
-    s.sendall(msg.encode())
-    r = s.recv(buf_size).decode()
-    print(r)
-    n = get_order(r, num, length, chunk_size)
-    print(n)
-    s.close()
+    # s = socket.create_connection(address)
+    # msg = set_message(url, 0, 100)
+    # s.sendall(msg.encode())
+    # r = s.recv(buf_size).decode()
+    # print(r)
+    # n = get_order(r, num, length, chunk_size)
+    # print(n)
+    # s.close()
 
-    # for s in range(num):
-    #     s = socket.create_connection(address)
-    #     sock.append(s)
-    #
-    # begin = 0
-    # data = []
-    #
-    # for s in sock:
-    #     msg = set_message(url, begin, begin + chunk_size - 1)
-    #     begin += chunk_size
-    #     s.sendall(msg.encode())
-    #     r = s.recv(buf_size).decode()
-    #     index = get_order(r, num, length)
-    #     c = r[r.find('\r\n\r\n') + len('\r\n\r\n'):]
-    #     data.insert(index, c)
-    #     print(c)
+    for s in range(num):
+        s = socket.create_connection(address)
+        sock.append(s)
+
+    begin = 0
+    data = []
+
+    for s in sock:
+        msg = set_message(url, begin, begin + chunk_size - 1)
+        begin += chunk_size
+        s.sendall(msg.encode())
+        r = s.recv(buf_size).decode()
+        index = get_order(r, chunk_size)
+        c = r[r.find('\r\n\r\n') + len('\r\n\r\n'):]
+        data.insert(index, c)
+        # print(c)
+
+    text = ''
+    for x in data:
+        text += x
+
+    print(text)
 
 
 def set_message(url, n, m):
@@ -71,9 +77,9 @@ def get_begin(r):
     return int(x)
 
 
-# def get_order(r, num, length, chunk_size):
-#     begin = get_begin(r)
-#
+def get_order(r, chunk_size):
+    begin = get_begin(r)
+    return int(begin / chunk_size)
 
 
 if __name__ == '__main__':
