@@ -57,7 +57,7 @@ def set_message(url, n, m):
     return 'GET {0} HTTP/1.1\r\nHost: {1}\r\nRange: bytes={2}-{3}\r\n\r\n'.format(url.path, url.netloc, n, m)
 
 
-def get_order(r, num, length, chunk_size):
+def get_begin(r):
     r = r[r.find('bytes ') + len('bytes '):]
     r = r[:r.find('\r\n\r\n')]
 
@@ -68,7 +68,12 @@ def get_order(r, num, length, chunk_size):
 
         x += i
 
-    return x
+    return int(x)
+
+
+# def get_order(r, num, length, chunk_size):
+#     begin = get_begin(r)
+#
 
 
 if __name__ == '__main__':
