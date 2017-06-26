@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 def main():
     argv = sys.argv
     argc = len(argv)
-    buf_size = 4096
+    buf_size = 8192
 
     url = argv[1]
     hr = requests.head(url)
