@@ -6,8 +6,7 @@ from urllib.parse import urlparse
 
 def main():
     argv = sys.argv
-    argc = len(argv)
-    buf_size = 8192
+    buf_size = 1024
 
     url = argv[1]
     hr = requests.head(url)
@@ -41,14 +40,28 @@ def main():
 
     begin = 0
     data = []
+    index = 0
 
     for s in sock:
         msg = set_message(url, begin, begin + chunk_size - 1)
         begin += chunk_size
         s.sendall(msg.encode())
-        r = s.recv(buf_size).decode()
-        index = get_order(r, chunk_size)
-        c = r[r.find('\r\n\r\n') + len('\r\n\r\n'):]
+        total = 0
+        c = ''
+        while True:
+            r = s.recv(buf_size)
+            r = r.decode()
+            if total == 0:
+                index = get_order(r, chunk_size)
+                tmp = r[r.find('\r\n\r\n') + len('\r\n\r\n'):]
+            else:
+                tmp = r
+
+            c += tmp
+            total += buf_size
+            if total >= chunk_size:
+                break
+
         data.insert(index, c)
         # print(c)
 
