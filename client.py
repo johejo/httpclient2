@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 def main():
     argv = sys.argv
-    buf_size = 4096
+    buf_size = 8192
 
     url = argv[1]
     hr = requests.head(url)
@@ -59,9 +59,11 @@ def main():
 
             c += tmp
             total += buf_size
-            if total >= chunk_size:
+            if total > chunk_size:
                 break
 
+        if len(data) == num:
+            c += s.recv(reminder).decode()
         data.insert(index, c)
         # print(c)
 
