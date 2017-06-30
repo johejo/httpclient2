@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 def main():
     argv = sys.argv
-    buf_size = 8192
+    buf_size = 1024
 
     url = argv[1]
     hr = requests.head(url)
@@ -47,19 +47,19 @@ def main():
         begin += chunk_size
         s.sendall(msg.encode())
         total = 0
-        c = ''
+        c = bytearray()
         while True:
             r = s.recv(buf_size)
-            r = r.decode()
             if total == 0:
-                index = get_order(r, chunk_size)
-                tmp = r[r.find('\r\n\r\n') + len('\r\n\r\n'):]
+                tmp = r.decode()
+                index = get_order(tmp, chunk_size)
+                tmp = tmp[tmp.find('\r\n\r\n') + len('\r\n\r\n'):].encode()
             else:
                 tmp = r
 
             c += tmp
             total += buf_size
-            if total > chunk_size:
+            if total >= chunk_size:
                 break
 
         if len(data) == num:
@@ -69,9 +69,9 @@ def main():
 
     text = ''
     for x in data:
-        text += x
+        text += x.decode()
 
-    print(text)
+    print(text, end='')
 
 
 def set_message(url, n, m):
