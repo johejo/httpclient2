@@ -99,7 +99,7 @@ def read_header(sf, chunk_size):
     while True:
         l = sf.readline().decode()
         # print(l)
-        if 'Content-Range' in l:
+        if 'content-range' in l or 'Content-Range' in l:
             index = get_order(l, chunk_size)
 
         if l == '\r\n':
