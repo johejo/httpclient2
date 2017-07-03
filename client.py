@@ -10,7 +10,7 @@ def main():
 
     url = argv[1]
     hr = requests.head(url)
-    length = int(hr.headers['Content-Length'])
+    length = int(hr.headers['content-length'])
 
     # print(hr.headers)
 
