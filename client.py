@@ -99,6 +99,8 @@ def read_header(sf, chunk_size):
     while True:
         l = sf.readline().decode()
         # print(l)
+        if 'HTTP 200 OK' in l:
+            exit(1)
         if 'content-range' in l or 'Content-Range' in l:
             index = get_order(l, chunk_size)
 
