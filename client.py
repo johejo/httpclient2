@@ -25,60 +25,62 @@ def main():
 
     address = (socket.gethostbyname(url.netloc), port)
 
-    # s = socket.create_connection(address)
-    # msg = set_message(url, 0, 100)
-    # s.sendall(msg.encode())
-    # r = s.recv(buf_size).decode()
-    # print(r)
-    # n = get_order(r, num, length, chunk_size)
-    # print(n)
-    # s.close()
-
     for s in range(num):
         s = socket.create_connection(address)
         sock.append(s)
 
     begin = 0
     data = []
-    index = 0
+    i = 0
 
     for s in sock:
-        msg = set_message(url, begin, begin + chunk_size - 1)
+        if i == num - 1:
+            end = begin + chunk_size - 1 + reminder
+        else:
+            end = begin + chunk_size - 1
+
+        msg = set_message(url, begin, end)
         begin += chunk_size
         s.sendall(msg.encode())
         total = 0
-        c = bytearray()
-        while True:
-            r = s.recv(buf_size)
-            if total == 0:
-                tmp = r.decode()
-                index = get_order(tmp, chunk_size)
-                tmp = tmp[tmp.find('\r\n\r\n') + len('\r\n\r\n'):].encode()
-            else:
-                tmp = r
 
-            c += tmp
-            total += buf_size
+        sf = s.makefile('b')
+        index = read_header(sf, chunk_size)
+
+        tmp = bytearray()
+        while True:
+            if chunk_size - total < buf_size:
+                if i == num - 1:
+                    read_size = chunk_size - total + reminder
+                else:
+                    read_size = chunk_size - total
+            else:
+                read_size = buf_size
+
+            r = sf.read(read_size)
+            tmp += r
+
+            # print(r)
+            total += len(r)
+            e = len(r)
             if total >= chunk_size:
                 break
 
-        if len(data) == num:
-            c += s.recv(reminder).decode()
-        data.insert(index, c)
-        # print(c)
+        data.insert(index, tmp)
+        i += 1
 
-    text = ''
-    for x in data:
-        text += x.decode()
+    x = bytes()
+    for d in data:
+        x += d
 
-    print(text, end='')
+    print(x.decode(), end='')
 
 
 def set_message(url, n, m):
     return 'GET {0} HTTP/1.1\r\nHost: {1}\r\nRange: bytes={2}-{3}\r\n\r\n'.format(url.path, url.netloc, n, m)
 
 
-def get_begin(r):
+def get_order(r, chunk_size):
     r = r[r.find('bytes ') + len('bytes '):]
     r = r[:r.find('\r\n\r\n')]
 
@@ -89,12 +91,21 @@ def get_begin(r):
 
         x += i
 
-    return int(x)
+    return int(int(x) / chunk_size)
 
 
-def get_order(r, chunk_size):
-    begin = get_begin(r)
-    return int(begin / chunk_size)
+def read_header(sf, chunk_size):
+    index = 0
+    while True:
+        l = sf.readline().decode()
+        # print(l)
+        if 'Content-Range' in l:
+            index = get_order(l, chunk_size)
+
+        if l == '\r\n':
+            break
+
+    return index
 
 
 if __name__ == '__main__':
