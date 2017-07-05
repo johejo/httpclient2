@@ -10,7 +10,7 @@ def main():
 
     url = argv[1]
     hr = requests.head(url)
-    if hr.status_code != 206:
+    if hr.status_code != 200:
         print("ERROR", file=sys.stderr)
         exit(1)
     length = int(hr.headers['content-length'])
@@ -71,12 +71,16 @@ def main():
 
         data.insert(index, tmp)
         i += 1
+        s.close()
 
     x = bytes()
     for d in data:
         x += d
 
-    print(x.decode(), end='')
+    f = open('rf', 'wb')
+    f.write(x)
+    f.close()
+    # print(x.decode(), end='')
 
 
 def set_message(url, n, m):
