@@ -10,6 +10,9 @@ def main():
 
     url = argv[1]
     hr = requests.head(url)
+    if hr.status_code != 206:
+        print("ERROR", file=sys.stderr)
+        exit(1)
     length = int(hr.headers['content-length'])
 
     # print(hr.headers)
