@@ -18,15 +18,14 @@ def main():
     # print(hr.headers)
 
     url = urlparse(argv[1])
-    port = int(argv[2])
-    num = int(argv[3])
+    num = int(argv[2])
 
     chunk_size = int(length / num)
     reminder = int(length % num)
 
     sock = []
 
-    address = (socket.gethostbyname(url.netloc), port)
+    address = (socket.gethostbyname(url.hostname), url.port)
 
     for s in range(num):
         s = socket.create_connection(address)
@@ -45,6 +44,8 @@ def main():
         msg = set_message(url, begin, end)
         begin += chunk_size
         s.sendall(msg.encode())
+
+    for s in sock:
         total = 0
 
         sf = s.makefile('b')
@@ -65,7 +66,6 @@ def main():
 
             # print(r)
             total += len(r)
-            e = len(r)
             if total >= chunk_size:
                 break
 
@@ -77,7 +77,7 @@ def main():
     for d in data:
         x += d
 
-    f = open('rf', 'wb')
+    f = open('receive', 'wb')
     f.write(x)
     f.close()
     # print(x.decode(), end='')
