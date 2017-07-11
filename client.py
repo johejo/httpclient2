@@ -77,7 +77,8 @@ def main():
     for d in data:
         x += d
 
-    f = open('receive', 'wb')
+    filename = url.path[url.path.rfind('/') + 1:]
+    f = open('{0}'.format(filename), 'wb')
     f.write(x)
     f.close()
     # print(x.decode(), end='')
