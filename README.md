@@ -19,5 +19,3 @@ $pip install requests
 
 ##Usage
 $python client.py [URL] [NUM OF CONNECTION]
-
-URL must be included port number and filename.

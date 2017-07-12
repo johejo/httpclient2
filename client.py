@@ -25,7 +25,12 @@ def main():
 
     sock = []
 
-    address = (socket.gethostbyname(url.hostname), url.port)
+    if url.port is None:
+        port = '80'
+    else:
+        port = url.port
+
+    address = (socket.gethostbyname(url.hostname), port)
 
     for s in range(num):
         s = socket.create_connection(address)
