@@ -26,13 +26,15 @@ def main():
         exit(1)
     length = int(hr.headers['content-length'])
 
-    if len(argv) >= 4:
-        chunk_size = int(argv[3])
-        reminder = int(length % chunk_size)
-        # num = int(length // chunk_size)
-    else:
-        chunk_size = int(length / num)
-        reminder = int(length % num)
+    # if len(argv) >= 4:
+    #     chunk_size = int(argv[3])
+    #     reminder = int(length % chunk_size)
+    #     # num = int(length // chunk_size)
+    # else:
+    #     chunk_size = int(length / num)
+    #     reminder = int(length % num)
+    chunk_size = int(length / num)
+    reminder = int(length % num)
 
     filename = url.path[url.path.rfind('/') + 1:]
     f = open('{0}'.format(filename), 'wb')
@@ -48,7 +50,7 @@ def main():
     address = (socket.gethostbyname(url.hostname), port)
 
     begin = 0
-    data = []
+    data = [bytearray() for i in range(num)]
     i = 0
 
     for s in range(num):
@@ -89,7 +91,7 @@ def main():
             if total >= chunk_size:
                 break
 
-        data.insert(index, tmp)
+        data[i] = tmp
         if data[i] is not None:
             f = open('{0}'.format(filename), 'ab')
             f.write(data[i])
