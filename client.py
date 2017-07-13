@@ -26,8 +26,13 @@ def main():
         exit(1)
     length = int(hr.headers['content-length'])
 
-    chunk_size = int(length / num)
-    reminder = int(length % num)
+    if len(argv) >= 4:
+        chunk_size = int(argv[3])
+        reminder = int(length % chunk_size)
+        # num = int(length // chunk_size)
+    else:
+        chunk_size = int(length / num)
+        reminder = int(length % num)
 
     filename = url.path[url.path.rfind('/') + 1:]
     f = open('{0}'.format(filename), 'wb')
