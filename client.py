@@ -89,12 +89,6 @@ def main():
     for s in sock:
         s.close()
 
-    x = bytes()
-    for d in data:
-        x += d
-
-        # print(x.decode(), end='')
-
 
 def set_message(url, n, m):
     return 'GET {0} HTTP/1.1\r\nHost: {1}\r\nRange: bytes={2}-{3}\r\n\r\n'.format(url.path, url.netloc, n, m)
