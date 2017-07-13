@@ -56,7 +56,7 @@ def main():
         s = socket.create_connection(address)
         sock.append(s)
 
-    i = 0
+    # i = 0
     for i in range(num):
         if i == num - 1:
             end = begin + chunk_size - 1 + reminder
@@ -66,9 +66,9 @@ def main():
         msg = set_message(url, begin, end)
         begin += chunk_size
         sock[0].sendall(msg.encode())
-        i += 1
+        # i += 1
 
-    i = 0
+    # i = 0
     sf = sock[0].makefile('b')
     for i in range(num):
         total = 0
@@ -99,7 +99,7 @@ def main():
             f.write(data[index])
             f.close()
 
-        i += 1
+        # i += 1
 
     for s in sock:
         s.close()
