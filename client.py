@@ -51,11 +51,13 @@ def main():
 
     begin = 0
     data = [bytearray() for i in range(num)]
-    i = 0
 
-    for s in range(num):
+    for i in range(num):
         s = socket.create_connection(address)
         sock.append(s)
+
+    i = 0
+    for s in sock:
         if i == num - 1:
             end = begin + chunk_size - 1 + reminder
         else:
