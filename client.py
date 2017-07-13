@@ -23,6 +23,10 @@ def main():
     chunk_size = int(length / num)
     reminder = int(length % num)
 
+    filename = url.path[url.path.rfind('/') + 1:]
+    f = open('{0}'.format(filename), 'wb')
+    f.close()
+
     sock = []
 
     if url.port is None:
@@ -75,17 +79,19 @@ def main():
                 break
 
         data.insert(index, tmp)
+        if data[i] is not None:
+            f = open('{0}'.format(filename), 'ab')
+            f.write(data[i])
+            f.close()
         i += 1
+
+    for s in sock:
         s.close()
 
     x = bytes()
     for d in data:
         x += d
 
-    filename = url.path[url.path.rfind('/') + 1:]
-    f = open('{0}'.format(filename), 'wb')
-    f.write(x)
-    f.close()
     # print(x.decode(), end='')
 
 
