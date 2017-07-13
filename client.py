@@ -7,18 +7,24 @@ from urllib.parse import urlparse
 def main():
     argv = sys.argv
     buf_size = 1024
+    default_url = 'http://165.242.111.77:80/index.html'
+    default_num = 6
 
-    url = argv[1]
-    hr = requests.head(url)
+    if len(argv) >= 2:
+        url = urlparse(argv[1])
+    else:
+        url = urlparse(default_url)
+
+    if len(argv) >= 3:
+        num = int(argv[2])
+    else:
+        num = default_num
+
+    hr = requests.head(url.scheme+'://'+url.netloc+url.path)
     if hr.status_code != 200:
-        print("ERROR", file=sys.stderr)
+        print("ERROR STATUS CODE {0}".format(hr.status_code), file=sys.stderr)
         exit(1)
     length = int(hr.headers['content-length'])
-
-    # print(hr.headers)
-
-    url = urlparse(argv[1])
-    num = int(argv[2])
 
     chunk_size = int(length / num)
     reminder = int(length % num)
