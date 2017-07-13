@@ -36,15 +36,13 @@ def main():
 
     address = (socket.gethostbyname(url.hostname), port)
 
-    for s in range(num):
-        s = socket.create_connection(address)
-        sock.append(s)
-
     begin = 0
     data = []
     i = 0
 
-    for s in sock:
+    for s in range(num):
+        s = socket.create_connection(address)
+        sock.append(s)
         if i == num - 1:
             end = begin + chunk_size - 1 + reminder
         else:
@@ -92,7 +90,7 @@ def main():
     for d in data:
         x += d
 
-    # print(x.decode(), end='')
+        # print(x.decode(), end='')
 
 
 def set_message(url, n, m):
