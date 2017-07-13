@@ -20,7 +20,7 @@ def main():
     else:
         num = default_num
 
-    hr = requests.head(url.scheme+'://'+url.netloc+url.path)
+    hr = requests.head(url.scheme + '://' + url.netloc + url.path)
     if hr.status_code != 200:
         print("ERROR STATUS CODE {0}".format(hr.status_code), file=sys.stderr)
         exit(1)
@@ -52,12 +52,12 @@ def main():
     begin = 0
     data = [bytearray() for i in range(num)]
 
-    for i in range(num):
+    for i in range(1):
         s = socket.create_connection(address)
         sock.append(s)
 
     i = 0
-    for s in sock:
+    for i in range(num):
         if i == num - 1:
             end = begin + chunk_size - 1 + reminder
         else:
@@ -65,14 +65,14 @@ def main():
 
         msg = set_message(url, begin, end)
         begin += chunk_size
-        s.sendall(msg.encode())
+        sock[0].sendall(msg.encode())
         i += 1
 
     i = 0
-    for s in sock:
+    sf = sock[0].makefile('b')
+    for i in range(num):
         total = 0
 
-        sf = s.makefile('b')
         index = read_header(sf, chunk_size)
 
         tmp = bytearray()
