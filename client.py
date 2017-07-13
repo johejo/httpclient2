@@ -51,7 +51,9 @@ def main():
         msg = set_message(url, begin, end)
         begin += chunk_size
         s.sendall(msg.encode())
+        i += 1
 
+    i = 0
     for s in sock:
         total = 0
 
@@ -81,6 +83,7 @@ def main():
             f = open('{0}'.format(filename), 'ab')
             f.write(data[i])
             f.close()
+
         i += 1
 
     for s in sock:
