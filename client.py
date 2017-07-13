@@ -91,10 +91,10 @@ def main():
             if total >= chunk_size:
                 break
 
-        data[i] = tmp
-        if data[i] is not None:
+        data[index] = tmp
+        if data[index] is not None:
             f = open('{0}'.format(filename), 'ab')
-            f.write(data[i])
+            f.write(data[index])
             f.close()
 
         i += 1
