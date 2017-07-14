@@ -1,7 +1,7 @@
 httpclient2
 ===========
 
-multi connection http client
+original http client
 
 ##Requirement
 ###Python
